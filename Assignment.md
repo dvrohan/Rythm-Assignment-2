@@ -5,9 +5,7 @@ output:
     keep_md: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 ## Dataset
 
@@ -44,42 +42,88 @@ Dataset used is Boston Housing Dataset.
     + Root Mean Square Error (RMSE)
 
 ### Reading data
-```{r}
+
+```r
 data <- read.csv('BostonHousing.csv')
 ```
 
 ### Finding out the number of null data
-```{r}
+
+```r
 print(paste('The total number of null data are: ', sum(is.null(data))))
 ```
 
+```
+## [1] "The total number of null data are:  0"
+```
+
 ### Total Number of Observations
-```{r}
+
+```r
 print(paste('Total number of observations are:', nrow(data)))
 ```
 
+```
+## [1] "Total number of observations are: 506"
+```
+
 ### Maximum of values for each column
-```{r}
+
+```r
 sapply(data, max, na.rm = TRUE)
 ```
 
+```
+##     crim       zn    indus     chas      nox       rm      age      dis 
+##  88.9762 100.0000  27.7400   1.0000   0.8710   8.7800 100.0000  12.1265 
+##      rad      tax  ptratio        b    lstat     medv 
+##  24.0000 711.0000  22.0000 396.9000  37.9700  50.0000
+```
+
 ### Minimum of values for each column
-```{r}
+
+```r
 sapply(data, min, na.rm = TRUE)
 ```
 
+```
+##      crim        zn     indus      chas       nox        rm       age       dis 
+##   0.00632   0.00000   0.46000   0.00000   0.38500   3.56100   2.90000   1.12960 
+##       rad       tax   ptratio         b     lstat      medv 
+##   1.00000 187.00000  12.60000   0.32000   1.73000   5.00000
+```
+
 ### Standard deviation for each column
-```{r}
+
+```r
 sapply(data, sd, na.rm = TRUE)
 ```
 
+```
+##        crim          zn       indus        chas         nox          rm 
+##   8.6015451  23.3224530   6.8603529   0.2539940   0.1158777   0.7026171 
+##         age         dis         rad         tax     ptratio           b 
+##  28.1488614   2.1057101   8.7072594 168.5371161   2.1649455  91.2948644 
+##       lstat        medv 
+##   7.1410615   9.1971041
+```
+
 ### Number of unique values in each column
-```{r}
+
+```r
 sapply(data, function(x) length(unique(x)))
 ```
 
+```
+##    crim      zn   indus    chas     nox      rm     age     dis     rad     tax 
+##     504      26      76       2      81     446     356     412       9      66 
+## ptratio       b   lstat    medv 
+##      46     357     455     229
+```
+
 ### Pairwise correlation heat map of data set
-```{r}
+
+```r
 library(reshape2)
 library(ggplot2)
 correlation_matrix <- cor(data)
@@ -87,8 +131,11 @@ melted_correlation_matrix <- melt(correlation_matrix)
 ggplot(data = melted_correlation_matrix, aes(x = Var1, y = Var2, fill = value)) + geom_tile() 
 ```
 
+![](Assignment_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+
 ### Prediction of MEDV using regression algorithm and evaluating MSE, MAE, RMSE.
-```{r}
+
+```r
 set.seed(1234)
 training_model <- lm(formula = medv ~ ., data = data)
 predicted_model <- predict(training_model, newdata = data[,-14])
@@ -99,4 +146,8 @@ MAE <- sum(abs(difference))/length(data$medv)
 RSE <- sqrt(MSE)
 
 print(paste("MSE: ",MSE," MAE: ", MAE, " RSE: ",RSE))
+```
+
+```
+## [1] "MSE:  21.8948311817292  MAE:  3.27086281090033  RSE:  4.67919129569728"
 ```
